@@ -1,0 +1,56 @@
+SHOW DATABASES;
+CREATE DATABASE marksheet;
+USE marksheet;
+
+-- Create the tables with MySQL data types
+CREATE TABLE stud_marks (
+    name VARCHAR(25),
+    total_marks INT
+);
+
+CREATE TABLE result (
+    roll_number INT,
+    name VARCHAR(25),
+    class VARCHAR(30)
+);
+
+-- Create the procedure for grading students
+DELIMITER //
+CREATE PROCEDURE proc_grades (IN roll_no INT, IN name VARCHAR(25), IN marks INT)
+BEGIN
+    DECLARE class VARCHAR(30);
+
+    -- Check conditions and determine the class
+    IF marks BETWEEN 990 AND 1500 THEN
+        SET class = 'DISTINCTION';
+    ELSEIF marks BETWEEN 900 AND 989 THEN
+        SET class = 'FIRST CLASS';
+    ELSEIF marks BETWEEN 826 AND 899 THEN
+        SET class = 'HIGHER SECOND CLASS';
+    ELSE
+        SET class = 'FAIL';
+    END IF;
+
+    -- Insert into result table
+    INSERT INTO result VALUES (roll_no, name, class);
+
+    -- Insert into stud_marks table
+    INSERT INTO stud_marks VALUES (name, marks);
+END //
+DELIMITER ;
+
+-- Call the procedure for each student
+CALL proc_grades(54, 'SUDARSHAN', 1000);
+CALL proc_grades(46, 'ARYAN', 950);
+CALL proc_grades(58, 'ARJUN', 1050);
+CALL proc_grades(14, 'Aanika', 995);
+CALL proc_grades(19, 'Suhani', 889);
+CALL proc_grades(16, 'Kartiki', 965);
+CALL proc_grades(10, 'Shalima', 900);
+CALL proc_grades(20, 'Kusum', 777);
+
+SELECT * FROM stud_marks;
+
+SELECT * FROM result;
+
+

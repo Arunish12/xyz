@@ -1,0 +1,111 @@
+-- Step 1: Create a new database
+CREATE DATABASE IF NOT EXISTS university_db;
+
+-- Step 2: Switch to the new database
+USE university_db;
+
+-- Step 3: Create the `inst` table
+CREATE TABLE inst (
+    inst_id INT(10),
+    inst_name VARCHAR(20),
+    inst_salary DECIMAL(20, 2)
+);
+
+-- Step 4: Create the `department` table
+CREATE TABLE department (
+    dept_id INT(10),
+    dept_name VARCHAR(20),
+    inst_id INT(10)
+);
+
+-- Step 5: Insert data into `inst` table
+INSERT INTO inst VALUES (1, 'Prachi', 50000);
+INSERT INTO inst VALUES (2, 'Apurva', 51000);
+INSERT INTO inst VALUES (3, 'Sayali', 52000);
+INSERT INTO inst VALUES (4, 'Sakshi', 55000);
+INSERT INTO inst VALUES (5, 'Tanaya', 40000);
+INSERT INTO inst VALUES (6, 'Aarya', 30000);
+INSERT INTO inst VALUES (7, 'Rutuja', 60000);
+INSERT INTO inst VALUES (8, 'Aakansha', 40000);
+INSERT INTO inst VALUES (9, 'Tahseen', 45000);
+INSERT INTO inst VALUES (10, 'Apurva', 50000);
+INSERT INTO inst VALUES (11, 'Kanishka', 20000);
+INSERT INTO inst VALUES (12, 'Aditi', 45000);
+INSERT INTO inst VALUES (13, 'Shubham', 30000);
+
+-- Step 6: View all records in `inst` table
+SELECT * FROM inst;
+
+-- Step 7: Insert data into `department` table
+INSERT INTO department VALUES (111, 'Computer', 1);
+INSERT INTO department VALUES (222, 'IT', 2);
+INSERT INTO department VALUES (333, 'Electrical', 3);
+INSERT INTO department VALUES (444, 'Mechanical', 4);
+INSERT INTO department VALUES (555, 'Civil', 5);
+INSERT INTO department VALUES (666, 'AIML', 6);
+INSERT INTO department VALUES (777, 'AIDS', 7);
+INSERT INTO department VALUES (888, 'ECE', 8);
+INSERT INTO department VALUES (999, 'ENTC', 9);
+
+-- Step 8: View all records in `department` table
+SELECT * FROM department;
+
+-- Step 9: Inner join to find matching records
+SELECT * FROM inst INNER JOIN department ON inst.inst_id = department.inst_id;
+
+-- Step 10: Left join
+SELECT * FROM inst LEFT JOIN department ON inst.inst_id = department.inst_id;
+
+-- Step 11: Left join with department as the base
+SELECT * FROM department LEFT JOIN inst ON inst.inst_id = department.inst_id;
+
+-- Step 12: Right join
+SELECT * FROM department RIGHT JOIN inst ON inst.inst_id = department.inst_id;
+
+-- Step 13: Full outer join (emulated using UNION since MySQL doesn't support FULL JOIN natively)
+SELECT * FROM inst LEFT JOIN department ON inst.inst_id = department.inst_id
+UNION
+SELECT * FROM inst RIGHT JOIN department ON inst.inst_id = department.inst_id;
+
+-- Step 14: Find instructor with the highest salary
+SELECT inst_name FROM inst WHERE inst_salary = (SELECT MAX(inst_salary) FROM inst);
+
+-- Step 15: Find instructors who are in a department
+SELECT inst_name FROM inst WHERE inst_id IN (SELECT inst_id FROM department);
+
+-- Step 16: Create a view to show instructors with a salary greater than 50000
+CREATE VIEW inst_view AS
+SELECT inst_name, inst_salary FROM inst WHERE inst_salary > 50000;
+
+-- Step 17: Select data from `inst_view`
+SELECT * FROM inst_view;
+
+-- Step 18: Attempt to update `inst_view` (Note: views with certain conditions may not be directly updatable in MySQL)
+UPDATE inst SET inst_salary = 55000 WHERE inst_name = 'Sakshi';
+SELECT * FROM inst_view;
+
+-- Step 19: Recreate `inst_view` with more columns
+CREATE OR REPLACE VIEW inst_view AS
+SELECT inst_id, inst_name, inst_salary FROM inst WHERE inst_salary > 40000;
+
+-- Step 20: Select data from the updated `inst_view`
+SELECT * FROM inst_view;
+
+-- Step 21: Select distinct department names
+SELECT DISTINCT dept_name FROM department;
+
+-- Step 22: Calculate average salary in `inst` table
+SELECT AVG(inst_salary) AS average_salary FROM inst;
+
+-- Step 23: Count number of instructors in IT department
+SELECT COUNT(inst_name) FROM inst INNER JOIN department ON inst.inst_id = department.inst_id WHERE dept_name = 'IT';
+
+-- Step 24: Count number of instructors in the `department` table specifically for IT
+SELECT COUNT(inst_id) FROM department WHERE dept_name = 'IT';
+
+-- Step 25: Sum salaries of instructors in the Computer department
+SELECT SUM(inst_salary) FROM inst INNER JOIN department ON inst.inst_id = department.inst_id WHERE dept_name = 'Computer';
+
+-- Step 26: Total sum of all salaries from the `inst` table
+SELECT SUM(inst_salary) FROM inst;
+

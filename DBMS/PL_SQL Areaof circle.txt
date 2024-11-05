@@ -1,0 +1,38 @@
+-- Step 1: Create a database
+CREATE DATABASE IF NOT EXISTS circle_database;
+
+-- Use the newly created database
+USE circle_database;
+
+-- Step 2: Create the `circle` table with compatible data types for MySQL
+CREATE TABLE IF NOT EXISTS circle (
+    Radius INT,
+    Area DECIMAL(10, 2)
+);
+
+-- Step 3: Create a stored procedure to calculate and insert values
+DELIMITER //
+
+CREATE PROCEDURE InsertCircleData()
+BEGIN
+    DECLARE rad INT;  -- Variable for radius
+    DECLARE area DECIMAL(10, 2);  -- Variable for area
+
+    -- Loop from 5 to 9, calculate area, and insert into the circle table
+    SET rad = 5;
+    WHILE rad <= 9 DO
+        SET area = 3.14 * POW(rad, 2); -- Calculate area as π * r^2
+        INSERT INTO circle (Radius, Area) VALUES (rad, area); -- Insert radius and area
+        SET rad = rad + 1;
+    END WHILE;
+
+    -- Display results
+    SELECT 'RADIUS | AREA' AS Header;
+    SELECT Radius, Area FROM circle;
+END //
+
+DELIMITER ;
+
+-- Step 4: Call the stored procedure to execute the insertions
+CALL InsertCircleData();
+
